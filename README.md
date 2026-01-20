@@ -217,8 +217,7 @@ curl http://localhost:5000/api/conversions
 2. **Type Safety**: TypeScript used throughout for compile-time error checking
 3. **Prisma ORM**: Provides type-safe database queries and easy migrations
 4. **Error Handling**: Centralized error handling with custom AppError class
-5. **Validation**: Input validation on both frontend and backend
-6. **Decimal Precision**: Using Decimal type for accurate financial calculations
+5. **Decimal Precision**: Using Decimal type for accurate financial calculations
 
 ## Challenges Encountered and Solutions
 
