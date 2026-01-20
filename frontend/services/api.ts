@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Conversion, ConversionRequest, ApiResponse } from '@/types';
+import { Conversion, ConversionRequest, ForexRatesResponse, ApiResponse } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -24,8 +24,8 @@ export const conversionApi = {
   },
 
   // Get 
-  getRates: async (): Promise<any> => {
-    const response = await api.get<ApiResponse<any>>('/rates');
+  getRates: async (): Promise<ForexRatesResponse> => {
+    const response = await api.get<ApiResponse<ForexRatesResponse>>('/rates');
     return response.data.data;
   },
 };
