@@ -54,6 +54,7 @@ const ConversionHistory = ({ conversions, isLoading }: ConversionHistoryProps) =
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">From</th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">To</th>
               <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Rate</th>
+              <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Reason</th>
             </tr>
           </thead>
           <tbody>
@@ -71,7 +72,10 @@ const ConversionHistory = ({ conversions, isLoading }: ConversionHistoryProps) =
                 <td className="py-3 px-4 text-sm text-gray-600">
                   {conversion.conversionRate.toFixed(6)}
                 </td>
-
+                {/* reason for conversion  */}
+                <td className="py-3 px-4 text-sm text-gray-600">
+                  {conversion.reason?.label || 'N/A'}
+                </td>
               </tr>
             ))}
           </tbody>

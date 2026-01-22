@@ -44,7 +44,7 @@ class ForexService {
         this.apiKey = process.env.FOREX_API_KEY || '';
         this.baseUrl = 'http://api.exchangerate.host';
 
-
+        // Debugging logs, should be removed in prod
         console.log('Raw FOREX_API_KEY from env:', process.env.FOREX_API_KEY);
         console.log('API Key length:', this.apiKey.length);
         console.log('API Key value:', this.apiKey);
@@ -79,9 +79,9 @@ class ForexService {
                 timestamp: response.data.timestamp
             };
         } catch (error) {
-            if (error instanceof AxiosError) {
+            if (error instanceof AxiosError) { // If the error is specifically a http error from axios 
                 if (error.response) {
-                    const errorData = error.response.data as ForexApiResponse;
+                    const errorData = error.response.data as ForexApiResponse; // Cast to ForexApiResponse to access error info
                     throw new AppError(
                         `Forex API error: ${errorData.error?.info || 'Unknown error'}`,
                         error.response.status
@@ -102,7 +102,7 @@ class ForexService {
                     access_key: this.apiKey,
                     from: baseCurrency.toUpperCase(),
                     to: targetCurrency.toUpperCase(),
-                    amount: 1, // Rate for 1 unit
+                    amount: 1, // Rate for 1 unit, then I can multiply by the amount later
                     format: 1
                 },
             });
@@ -111,7 +111,7 @@ class ForexService {
                 throw new AppError(response.data.error?.info || 'Conversion failed', 400);
             }
 
-            return response.data.info.quote;
+            return response.data.info.quote; // Return the conversion rate that's precalculated by the API 
         } catch (error) {
             if (error instanceof AxiosError) {
                 if (error.response) {

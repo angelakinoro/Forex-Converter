@@ -5,26 +5,39 @@ import ConversionForm from '@/components/ConversionForm';
 import ConversionResult from '@/components/ConversionResult';
 import ConversionHistory from '@/components/ConversionHistory';
 import { conversionApi } from '@/services/api';
-import { Conversion, ConversionRequest } from '@/types';
+import { Conversion, ConversionRequest, Reason } from '@/types';
 
 const Home = () => {
-  const [currentConversion, setCurrentConversion] = useState<Conversion | null>(null);
   const [conversions, setConversions] = useState<Conversion[]>([]);
+  const [reasons, setReasons] = useState<Reason[]>([]);
   const [isConverting, setIsConverting] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch conversion history on component mount
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+ useEffect(() => {
+        const loadData = async () => {
+            try {
+                // Fetch History
+                fetchHistory(); 
+                
+                // Fetch Reasons
+                const reasonsData = await conversionApi.getReasons();
+                console.log('Reasons data in page:', reasonsData);
+                setReasons(reasonsData);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        loadData();
+    }, []);
 
   const fetchHistory = async () => {
     try {
       setIsLoadingHistory(true);
       const data = await conversionApi.getHistory();
       setConversions(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching history:', err);
       setError('Failed to load conversion history');
     } finally {
@@ -38,9 +51,8 @@ const Home = () => {
       setIsConverting(true);
       
       const result = await conversionApi.convert(data);
-      setCurrentConversion(result);
       
-      // Add new conversion to the top of the list
+      // Add new conversion to the top of the listt
       setConversions([result, ...conversions]);
     } catch (err: any) {
       console.error('Error converting:', err);
@@ -73,12 +85,12 @@ const Home = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Conversion Form - Left Column */}
           <div className="lg:col-span-2">
-            <ConversionForm onConvert={handleConvert} isLoading={isConverting} />
+            <ConversionForm onConvert={handleConvert} isLoading={isConverting} reasons={reasons} />
           </div>
 
           {/* Result - Right Column */}
           <div className="lg:col-span-1">
-            <ConversionResult conversion={currentConversion} />
+            <ConversionResult conversion={conversions[0]} />
           </div>
         </div>
 

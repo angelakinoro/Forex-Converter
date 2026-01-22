@@ -13,9 +13,9 @@ export const getLatestRates = async (req: Request, res: Response, next: NextFunc
 };
 
 export const convertCurrency = async (req: Request, res: Response, next: NextFunction) => {
-    const { amount, baseCurrency, targetCurrency } = req.body as ConversionRequest;
+    const { amount, baseCurrency, targetCurrency, reasonId } = req.body as ConversionRequest;
 
-    // Validation
+    // Validation {According to research, Zod would be better here especially for larger projects but keeping it simple for now}
     if (!amount || !baseCurrency || !targetCurrency) {
         throw new AppError('Missing required fields: amount, baseCurrency, targetCurrency', 400);
     }
@@ -36,6 +36,7 @@ export const convertCurrency = async (req: Request, res: Response, next: NextFun
         amount,
         baseCurrency,
         targetCurrency,
+        reasonId,
     });
 
     res.status(201).json({
@@ -44,7 +45,7 @@ export const convertCurrency = async (req: Request, res: Response, next: NextFun
     });
 };
 
-export const getAllConversions = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllConversions = async (req: Request, res: Response, next: NextFunction) => { // Possibly add pagination
     const conversions = await conversionService.getAllConversions();
     res.json({
         success: true,

@@ -21,6 +21,14 @@ model Conversion {
   convertedAmount Decimal     @map("converted_amount") @db.Decimal(18,2)
   conversionRate  Decimal     @map("conversion_rate") @db.Decimal(18,6)
   createdAt       DateTime    @default(now()) @map("created_at")
-
+  reasonId        Int?      
+  reason          Reason?     @relation(fields: [reasonId], references: [id])
   @@map("conversions")
+}
+
+model Reason {
+  id          Int          @id @default(autoincrement())
+  label       String       // e.g. "Business Expense"
+  conversions Conversion[] // The reverse relation
+  @@map("reasons")
 }

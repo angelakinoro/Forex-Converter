@@ -1,3 +1,8 @@
+export interface Reason {
+    id: number;
+    label: string;
+}
+
 export interface Conversion {
     id: number;
     amount: number;
@@ -5,13 +10,15 @@ export interface Conversion {
     targetCurrency: string;
     convertedAmount: number;
     conversionRate: number;
-    createdAt: Date;
+    createdAt: string;
+    reason?: Reason
 }
 
 export interface ConversionRequest {
     amount: number;
     baseCurrency: string;
     targetCurrency: string;
+    reasonId: number;
 }
 
 export interface ForexRatesResponse {
@@ -20,7 +27,7 @@ export interface ForexRatesResponse {
     timestamp?: number;
 }
 
-export interface ApiResponse<T> {
+export interface ApiResponse<T> { // Generic API response wrapper designed to match handshake from controllers in backend
     success: boolean;
     data: T;
     error?: {

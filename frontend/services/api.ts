@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Conversion, ConversionRequest, ForexRatesResponse, ApiResponse } from '@/types';
+import { Conversion, ConversionRequest, ForexRatesResponse, ApiResponse, Reason } from '@/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
@@ -23,9 +23,18 @@ export const conversionApi = {
     return response.data.data;
   },
 
-  // Get 
+  // Get latest forex rates
   getRates: async (): Promise<ForexRatesResponse> => {
     const response = await api.get<ApiResponse<ForexRatesResponse>>('/rates');
     return response.data.data;
   },
+
+  // Get reasons for currency conversion
+  getReasons: async (): Promise<Reason[]> => {
+    const response = await api.get<ApiResponse<Reason[]>>('/reasons');
+    console.log('Fetched reasons:', response.data.data);
+    return response.data.data;
+
+  },
+
 };

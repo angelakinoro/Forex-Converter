@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { ConversionRequest } from '@/types';
+import { ConversionRequest, Reason } from '@/types';
 
 interface ConversionFormProps {
   // Called when user submits form  
   onConvert: (data: ConversionRequest) => void;
   isLoading: boolean;
+  reasons: Reason[];
 }
 
-const ConversionForm = ({ onConvert, isLoading }: ConversionFormProps) => {
+const ConversionForm = ({ onConvert, isLoading, reasons }: ConversionFormProps) => {
 
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>(''); // Use string to allow empty input and decimal points
   const [baseCurrency, setBaseCurrency] = useState<string>('USD');
   const [targetCurrency, setTargetCurrency] = useState<string>('EUR');
+  const [reasonId, setReasonId] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   // Common currencies for the dropdown
@@ -19,6 +21,7 @@ const ConversionForm = ({ onConvert, isLoading }: ConversionFormProps) => {
     'USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 
     'INR', 'MXN', 'BRL', 'ZAR', 'KES', 'NGN'
   ];
+
 
   const validate = (): boolean => {
     const newErrors: { [key: string]: string } = {};
@@ -39,6 +42,10 @@ const ConversionForm = ({ onConvert, isLoading }: ConversionFormProps) => {
       newErrors.targetCurrency = 'Base and target currencies must be different';
     }
 
+    if (!reasonId) {
+      newErrors.reason = 'Please select a reason for conversion';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -51,6 +58,7 @@ const ConversionForm = ({ onConvert, isLoading }: ConversionFormProps) => {
         amount: parseFloat(amount),
         baseCurrency,
         targetCurrency,
+        reasonId: parseInt(reasonId)
       });
     }
   };
@@ -73,7 +81,7 @@ const ConversionForm = ({ onConvert, isLoading }: ConversionFormProps) => {
             step="0.01"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 ${
               errors.amount ? 'border-red-500' : 'border-gray-300'
             }`}
             placeholder="Enter amount"
@@ -132,6 +140,32 @@ const ConversionForm = ({ onConvert, isLoading }: ConversionFormProps) => {
           {errors.targetCurrency && (
             <p className="text-red-500 text-sm mt-1">{errors.targetCurrency}</p>
           )}
+        </div>
+
+        {/* Reasons  */}
+        <div>
+          <label htmlFor="reasonId" className="block text-sm font-medium text-gray-700 mb-1">
+            Reason for Conversion(Optional)
+          </label>
+          <select 
+            id="reasonId"
+            value={reasonId}
+            onChange={(e) => setReasonId(e.target.value)}
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 ${
+              errors.reason ? 'border-red-500' : 'border-gray-300'
+            }`}
+            disabled={isLoading}
+            >
+            <option value="">Select a reason</option>
+            
+             {reasons.map((reason) => (
+              <option key={reason.id} value={reason.id}>
+                {reason.label}
+              </option>
+            ))}
+          </select>
+
+          {/* <pre>{JSON.stringify(reasons, null, 2)}</pre> */}
         </div>
 
         {/* Submit Button */}

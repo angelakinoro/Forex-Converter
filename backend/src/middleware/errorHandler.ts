@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ApiErrorResponse } from "../types/index.js";
+import { ApiErrorResponse } from "../types/index";
 
 export class AppError extends Error implements ApiErrorResponse {
     statusCode: number;
@@ -14,7 +14,7 @@ export class AppError extends Error implements ApiErrorResponse {
 
 export const errorHandler = (
     err: Error | AppError,
-    req: Request, 
+    req: Request,  
     res: Response,
     next: NextFunction
 ) => {
@@ -38,6 +38,7 @@ export const errorHandler = (
 export const asyncHandler = (
     fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
 ) => {
+    console.log('asyncHandler wrapping function:', fn.name);
     return (req: Request, res: Response, next: NextFunction) => {
         Promise.resolve(fn(req, res, next)).catch(next);
     };

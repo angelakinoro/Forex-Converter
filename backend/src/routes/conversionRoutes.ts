@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import {getLatestRates, convertCurrency, getAllConversions,
+import {getLatestRates, convertCurrency, getAllConversions, 
 } from '../controllers/conversionController';
+import { getReasons } from '../controllers/reasonController';
 import { asyncHandler } from '../middleware/errorHandler';
 
 const router = Router();
@@ -13,5 +14,10 @@ router.post('/convert', asyncHandler(convertCurrency));
 
 // Get all past conversions
 router.get('/conversions', asyncHandler(getAllConversions));
+
+// Get reasons for currency conversion
+router.get('/reasons', asyncHandler(getReasons));
+
+
 
 export default router;
